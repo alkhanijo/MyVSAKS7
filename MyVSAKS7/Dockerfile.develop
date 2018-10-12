@@ -1,0 +1,15 @@
+FROM microsoft/aspnetcore-build:2.0
+ARG BUILD_CONFIGURATION=Debug
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+EXPOSE 80
+
+WORKDIR /src
+COPY ["MyVSAKS7/MyVSAKS7.csproj", "MyVSAKS7/"]
+
+RUN dotnet restore "MyVSAKS7/MyVSAKS7.csproj"
+COPY . .
+WORKDIR "/src/MyVSAKS7"
+RUN dotnet build --no-restore "MyVSAKS7.csproj" -c $BUILD_CONFIGURATION
+
+ENTRYPOINT ["dotnet", "run", "--no-restore", "--no-build", "--no-launch-profile", "-c", "$BUILD_CONFIGURATION", "--"]
